@@ -17,7 +17,7 @@ class InvalidToken(Exception):
 
 _MAX_CLOCK_SKEW = 60
 
-class Fernet(object):
+class RVH(object):
     def __init__(self, key: bytes, backend=None):
         backend = _get_backend(backend)
 
@@ -64,7 +64,7 @@ class Fernet(object):
         return base64.urlsafe_b64encode(basic_parts + hmac)
 
     def decrypt(self, token: bytes, ttl: typing.Optional[int] = None) -> bytes:
-        timestamp, data = Fernet._get_unverified_token_data(token)
+        timestamp, data = RVH._get_unverified_token_data(token)
         if ttl is None:
             time_info = None
         else:
@@ -78,11 +78,11 @@ class Fernet(object):
             raise ValueError(
                 "decrypt_at_time() can only be used with a non-None ttl"
             )
-        timestamp, data = Fernet._get_unverified_token_data(token)
+        timestamp, data = RVH._get_unverified_token_data(token)
         return self._decrypt_data(data, timestamp, (ttl, current_time))
 
     def extract_timestamp(self, token: bytes) -> int:
-        timestamp, data = Fernet._get_unverified_token_data(token)
+        timestamp, data = RVH._get_unverified_token_data(token)
         # Verify the token was not tampered with.
         self._verify_signature(data)
         return timestamp
@@ -155,7 +155,7 @@ def generate_key() -> bytes:
 #encryption 
 def encrypt(original_audio_file_path ,encrypted_file_path , key):
 
-    fernet=Fernet(key)
+    fernet=RVH(key)
 
     with open('key.key','wb') as filekey:
         filekey.write(key)
@@ -176,7 +176,7 @@ def encrypt(original_audio_file_path ,encrypted_file_path , key):
 #decryption
 def decrypt(encrypted_file_path ,decrypted_file_path , key):
 
-    fernet=Fernet(key)
+    fernet=RVH(key)
 
     with open(encrypted_file_path,'rb') as enc_file: #location of newly created voice file to be decrypted
         encrypted=enc_file.read()
@@ -191,6 +191,6 @@ key=generate_key()
 
 #print(key)
 
-encrypt("test.m4a", 'encrypted.wav', key)
+encrypt("C:\\Users\\vamsi\\Desktop\\Audio Encryption\\Test1\\test.m4a", 'encrypted.wav', key)
 
 decrypt('encrypted.wav', 'decrypted.wav', key)
