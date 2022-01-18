@@ -48,14 +48,17 @@ def plot_decrypted(file):
 def encrypt(original_audio_file_path ,encrypted_file_path , key):
 
     fernet=Fernet(key)
+    print(key)
     print("Encrypting audio...")
     with open(original_audio_file_path,'rb') as file: #location of voice file to be encrypted
         originalaudio=file.read()
-
+    # print("Type of original",type(originalaudio))
+    # print(originalaudio[:100])
     encrypted=fernet.encrypt(originalaudio)
 
     with open(encrypted_file_path,'wb') as encrypted_file: #location of newly created voice file after encryption
         encrypted_file.write(encrypted)
+    # print(hex(encrypted[:100]))
     print("Encryption complete")
     #the encryption audio file is not playable , since all the audio content is encrypted , software apps cannot read the actual data 
     # plot_encrypted(encrypted_file_path)
@@ -72,6 +75,7 @@ def decrypt(encrypted_file_path ,decrypted_file_path , key):
 
     with open(decrypted_file_path,'wb') as dec_file: #location of newly created voice file after decrypted
         dec_file.write(decrypted)
+    # print(decrypted[:10])
     plot_decrypted(decrypted_file_path)
     print("File Decrypted")
 def generate_key():
@@ -96,7 +100,7 @@ def plot_original(file):
 
 choice=int(input("Encrypt using\n1.Live Record\n2.Existing audio\n"))
 key=Fernet.generate_key()
-source_file='C:\\Users\\vamsi\\Desktop\\Audio Encryption\\Test1\\test.m4a'
+source_file='C:\\Users\\vamsi\\Desktop\\Audio Encryption\\Test1\\cricket.wav'
 if choice==1:
     live_audio()
 plot_original(source_file)
